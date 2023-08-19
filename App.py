@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 from matplotlib import style
 style.use('ggplot')
 import seaborn as sns
+from wordcloud import WordCloud
 
 data_df = pd.read_csv('train.csv')
 data_df.head()
@@ -68,4 +69,25 @@ explode = (0.1, 0.1)
 tags.plot(kind='pie',autopct = '%1.1f%%', shadow=True, colors = colors, startangle =90, 
          wedgeprops = wp, explode = explode, label='')
 plt.title('Distribution of sentiments')
+
+non_hate_tweets = data_df[data_df.label == 0]
+non_hate_tweets.head()
+
+text = ' '.join([word for word in non_hate_tweets['tweet']])
+plt.figure(figsize=(20,15), facecolor='None')
+wordcloud = WordCloud(max_words=500, width=1600, height=800).generate(text)
+plt.imshow(wordcloud, interpolation='bilinear')
+plt.axis('off')
+plt.title('Most frequent words in non hate tweets', fontsize = 20)
+
+neg_tweets = data_df[data_df.label == 1]
+neg_tweets.head()
+
+text = ' '.join([word for word in neg_tweets['tweet']])
+plt.figure(figsize=(20,15), facecolor='None')
+wordcloud = WordCloud(max_words=500, width=1600, height=800).generate(text)
+plt.imshow(wordcloud, interpolation='bilinear')
+plt.axis('off')
+plt.title('Most frequent words in hate tweets', fontsize = 20)
+
 plt.show()
